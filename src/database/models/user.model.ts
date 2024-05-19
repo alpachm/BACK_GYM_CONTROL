@@ -1,7 +1,31 @@
 import db from "./../config/index";
-import {DataTypes} from "sequelize";
+import {DataTypes, Model, Optional} from "sequelize";
 
-const User = db.define("users", {
+export interface IUser {
+    pk_user: number;
+    name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    img_url: string;
+    status: boolean;
+}
+
+interface IUserCreationAttributes extends Optional<IUser, "pk_user" | "img_url" | "status">{};
+
+class User extends Model<IUser, IUserCreationAttributes> implements IUser{
+    public pk_user!: number;
+    public name!: string;
+    public last_name!: string;
+    public email!: string;
+    public password!: string;
+    public img_url!: string;
+    public status!: boolean;
+}
+
+
+
+User.init({
     pk_user: {
         primaryKey: true,
         type: DataTypes.INTEGER,
@@ -18,6 +42,7 @@ const User = db.define("users", {
     },
     email: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false
     },
     password: {
@@ -32,6 +57,9 @@ const User = db.define("users", {
         type: DataTypes.BOOLEAN,
         defaultValue: true
     }
+}, {
+    sequelize: db,
+    tableName: "users"
 })
 
 export default User;

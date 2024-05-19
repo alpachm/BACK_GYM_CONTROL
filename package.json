@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
+    "start:dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+    "start:prod": "concurrently \"tsc -w\" \"SET NODE_ENV=production&nodemon dist/server.js\""
   },
   "keywords": [],
   "author": "",
@@ -29,8 +30,10 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/hpp": "^0.2.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9"
   }
 }

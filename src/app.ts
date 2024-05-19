@@ -6,7 +6,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import AppError from "./utils/appError";
 import globalHandlerError from "./controllers/error.controller";
-import userRouter from "./routes/user.routes";
+import authRoutes from "./routes/auth.routes";
 
 const app: Application = express();
 const limiter = rateLimit({
@@ -23,7 +23,7 @@ app.use(cors());
 
 app.use("/api/v1", limiter);
 
-app.use("/api/v1/users", userRouter);
+app.use("/api/v1/auth", authRoutes);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(

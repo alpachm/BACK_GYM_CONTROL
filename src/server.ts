@@ -3,7 +3,7 @@ import app from "./app";
 import db from "./database/config/index";
 import initModels from "./database/models/initModels";
 
-const port: string = process.env.PORT || "8000";
+const port: number = process.env.PORT ? +process.env.PORT : 8000;
 
 db.authenticate()
     .then(() => console.log("DB was authenticated"))
