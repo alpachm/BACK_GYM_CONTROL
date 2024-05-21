@@ -3,7 +3,7 @@ import AppError from "../utils/appError";
 import catchAsync from "../utils/catchAsync";
 import User, { IUser } from "../database/models/user.model";
 import bcrypt from "bcryptjs";
-import {formatText} from "./../utils/formatText";
+import { formatText } from "./../utils/formatText";
 import generateJWT from "./../utils/jwt";
 
 export const signup = catchAsync(
@@ -21,8 +21,6 @@ export const signup = catchAsync(
       img_url,
     });
 
-    const token = await generateJWT(user.pk_user);
-
     res.status(201).json({
       status: "success",
       message: "The user has been created",
@@ -31,7 +29,40 @@ export const signup = catchAsync(
         last_name: user.last_name,
         email: user.email,
       },
-      token
     });
+  }
+);
+
+export const signin = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password }: IUser = req.body;
+
+    const user: IUser | null = await User.findOne({
+      where: {
+        email: formatText(email),
+      },
+    });
+
+    if (!user) {
+      next(new AppError("Email or password incorrect, please try again", 401));
+    } else {
+      if (!(await bcrypt.compare(password, user?.password)))
+        next(
+          new AppError("Email or password incorrect, please try again", 401)
+        );
+
+        const token = await generateJWT(user.pk_user);
+
+        res.status(200).json({
+          status: "success",
+          message: "Log in successfully",
+          user: {
+            full_name: `${user.name} ${user.last_name}`,
+            email: user.email,
+            img_url: user.img_url
+          },
+          token
+        })
+    }
   }
 );

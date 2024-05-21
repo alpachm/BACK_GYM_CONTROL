@@ -44,3 +44,13 @@ export const signupValidations = [
   body("img_url").isString().withMessage("Enter a valid image"),
   validFields,
 ];
+
+export const signinValidations = [
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Enter a valid email"),
+  body("password").notEmpty().withMessage("Password is required"),
+  validFields,
+];
