@@ -61,3 +61,19 @@ export const updateUserValidations = [
   body("img_url").isString().withMessage("Enter a valid image"),
   validFields,
 ];
+
+export const changePasswordValidations = [
+  body("currentPassword")
+    .notEmpty()
+    .withMessage("The current password is required")
+    .isString()
+    .withMessage("Enter a valid password"),
+  body("newPassword")
+    .notEmpty()
+    .withMessage("The new password is required")
+    .isString()
+    .withMessage("Enter a valid password")
+    .isLength({ min: 7 })
+    .withMessage("The password must be at least 7 characters"),
+  validFields,
+];

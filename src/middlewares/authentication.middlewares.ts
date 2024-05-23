@@ -64,3 +64,13 @@ interface DecodedToken extends JwtPayload {
   
     next();
   });
+
+  export const protectedAccountOwner = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const {user, sessionUser} = req as ExtendedRequest;
+
+    if(user.pk_user !== sessionUser.pk_user){
+      return next(new AppError("You don't have permission to perform this action", 401));
+    }
+
+    next();
+  })
