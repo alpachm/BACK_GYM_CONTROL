@@ -1,12 +1,17 @@
 import express from "express";
-import app from "../app";
-import {signup, signin} from "../controllers/auth.controller";
-import {signupValidations, signinValidations} from "./../middlewares/validations.middleware";
+import {signup, signin, updateUser} from "../controllers/auth.controller";
+import {signupValidations, signinValidations, updateUserValidations} from "../validations/auth.validations";
+import {validIfUserExist} from "./../middlewares/auth.middlewares";
+import {protect} from "./../middlewares/authentication.middlewares";
 
 const router = express.Router();
 
-router.post("/signup", signupValidations, signup)
+router.post("/signup", signupValidations, signup);
 
-router.post("/signin", signinValidations, signin)
+router.post("/signin", signinValidations, signin);
+
+router.use(protect);
+
+router.post("/update/:id", validIfUserExist, updateUserValidations, updateUser);
 
 export default router;

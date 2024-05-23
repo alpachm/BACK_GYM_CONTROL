@@ -8,10 +8,11 @@ export interface IUser {
     email: string;
     password: string;
     img_url: string;
+    passwordChangeAt: Date
     status: boolean;
 }
 
-interface IUserCreationAttributes extends Optional<IUser, "pk_user" | "img_url" | "status">{};
+interface IUserCreationAttributes extends Optional<IUser, "pk_user" | "img_url" | "passwordChangeAt" | "status">{};
 
 class User extends Model<IUser, IUserCreationAttributes> implements IUser{
     public pk_user!: number;
@@ -20,6 +21,7 @@ class User extends Model<IUser, IUserCreationAttributes> implements IUser{
     public email!: string;
     public password!: string;
     public img_url!: string;
+    public passwordChangeAt!: Date;
     public status!: boolean;
 }
 
@@ -51,6 +53,10 @@ User.init({
     },
     img_url: {
         type: DataTypes.STRING,
+        allowNull: true
+    },
+    passwordChangeAt: {
+        type: DataTypes.DATE,
         allowNull: true
     },
     status: {

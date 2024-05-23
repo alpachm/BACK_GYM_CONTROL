@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import AppError from "./../utils/appError";
-import { ExtendedError } from "interfaces/error.interface";
+import { ExtendedError } from "interfaces/extended.interfaces";
 
 const handle22P02Error = () => {
     return new AppError("Enter a valid enum type", 400);

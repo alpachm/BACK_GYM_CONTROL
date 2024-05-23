@@ -54,3 +54,10 @@ export const signinValidations = [
   body("password").notEmpty().withMessage("Password is required"),
   validFields,
 ];
+
+export const updateUserValidations = [
+  body("name").isString().withMessage("Enter a valid name"),
+  body("last_name").isString().withMessage("Enter a valid last name"),
+  body("img_url").isString().withMessage("Enter a valid image"),
+  validFields,
+];

@@ -5,6 +5,7 @@ import User, { IUser } from "../database/models/user.model";
 import bcrypt from "bcryptjs";
 import { formatText } from "./../utils/formatText";
 import generateJWT from "./../utils/jwt";
+import { ExtendedRequest } from "interfaces/extended.interfaces";
 
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -51,18 +52,40 @@ export const signin = catchAsync(
           new AppError("Email or password incorrect, please try again", 401)
         );
 
-        const token = await generateJWT(user.pk_user);
+      const token = await generateJWT(user.pk_user);
 
-        res.status(200).json({
-          status: "success",
-          message: "Log in successfully",
-          user: {
-            full_name: `${user.name} ${user.last_name}`,
-            email: user.email,
-            img_url: user.img_url
-          },
-          token
-        })
+      res.status(200).json({
+        status: "success",
+        message: "Log in successfully",
+        user: {
+          full_name: `${user.name} ${user.last_name}`,
+          email: user.email,
+          img_url: user.img_url,
+        },
+        token,
+      });
     }
+  }
+);
+
+export const updateUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as ExtendedRequest).user;
+    const {name, last_name, img_url}: IUser = req.body;
+
+    if(!name && !last_name && !img_url) {
+      return next(new AppError("Enter at least one camp", 400));
+    }
+
+    await user.update({
+      name: formatText(name) || user.name,
+      last_name: formatText(last_name) || user.last_name,
+      img_url: img_url || user.img_url
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "User has been updated"
+    })
   }
 );
