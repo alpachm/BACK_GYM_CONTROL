@@ -2,6 +2,8 @@ import catchAsync from "./../utils/catchAsync";
 import AppError from "./../utils/appError";
 import Routine, { IRoutine } from "./../database/models/routine.model";
 import User from "./../database/models/user.model";
+import RoutineExercise from "./../database/models/routine_exercise.model";
+import Exercise from "./../database/models/exercise.model";
 import { NextFunction, Request, Response } from "express";
 import { formatText } from "./../utils/formatText";
 import { EDays } from "./../enums/day.enums";
@@ -44,6 +46,42 @@ export const createRoutine = catchAsync(
     });
   }
 );
+
+export const findAllRoutineByFkUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const {userId} = req.params;
+
+  const user = await User.findOne({
+    where: {
+      pk_user: userId,
+      status: true
+    }
+  });
+
+  if(!user) return next(new AppError(`The user with id ${userId} don't exist`, 404));
+
+  const routines = await Routine.findAll({
+    where: {
+      fk_user: user.pk_user
+    },
+    attributes: {exclude: ["createdAt", "updatedAt"]},
+    include: [{
+      model: RoutineExercise,
+      attributes: ["pk_routine_exercise"],
+      include: [{
+        model: Exercise,
+        attributes: {exclude: ["createdAt", "updatedAt"]}
+      }]
+    }]
+  });
+
+  if(!routines.length) return next(new AppError(`There is no routines from the user with id ${user.pk_user}`, 404));
+
+  res.status(200).json({
+    status: "success",
+    message: "All routines were listed",
+    routines
+  })
+})
 
 export const deleteRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const routine = (req as ExtendedRoutineRequest).routine;
