@@ -5,7 +5,7 @@ import User, { IUser } from "../database/models/user.model";
 import bcrypt from "bcryptjs";
 import { formatText } from "./../utils/formatText";
 import generateJWT from "./../utils/jwt";
-import { ExtendedRequest } from "interfaces/extended.interfaces";
+import { ExtendedAuthRequest } from "interfaces/extended.interfaces";
 import { IChangePassword } from "interfaces/auth.interfaces";
 
 export const signup = catchAsync(
@@ -71,7 +71,7 @@ export const signin = catchAsync(
 
 export const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const user = (req as ExtendedRequest).user;
+    const user = (req as ExtendedAuthRequest).user;
     const { name, last_name, img_url }: IUser = req.body;
 
     if (!name && !last_name && !img_url) {
@@ -94,7 +94,7 @@ export const updateUser = catchAsync(
 export const updatePassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { currentPassword, newPassword }: IChangePassword = req.body;
-    const { user } = req as ExtendedRequest;
+    const { user } = req as ExtendedAuthRequest;
 
     if (!(await bcrypt.compare(currentPassword, user.password))) {
       return next(

@@ -6,6 +6,7 @@ import { NextFunction, Request, Response } from "express";
 import { formatText } from "./../utils/formatText";
 import { EDays } from "./../enums/day.enums";
 import getEnumKeyValue from "./../utils/getEnumKeyValue";
+import {ExtendedRoutineRequest} from "./../interfaces/extended.interfaces";
 
 export const createRoutine = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -25,11 +26,6 @@ export const createRoutine = catchAsync(
       return next(new AppError("Enter a valid day", 400));
     }
 
-    /**
-     * TOCA VALIDAR QUE PARA EL DIA QUE SE CREO NO EXISTA UNA RUTINA ASIGNADA
-     * 
-     */
-
     const routine = await Routine.create({
       fk_user,
       fk_day,
@@ -41,7 +37,21 @@ export const createRoutine = catchAsync(
     res.status(201).json({
       status: "success",
       message: `The routine for ${selectedRoutineDay} has been created`,
-      routine,
+      routine: {
+        id: routine.pk_routine,
+        name: routine.name
+      },
     });
   }
 );
+
+export const deleteRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const routine = (req as ExtendedRoutineRequest).routine;
+
+    await routine.destroy();
+
+    res.status(200).json({
+      status: "success",
+      message: "The routine was deleted"
+    })
+})

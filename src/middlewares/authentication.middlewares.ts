@@ -3,7 +3,7 @@ import AppError from "./../utils/appError";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import User from "./../database/models/user.model";
-import { ExtendedRequest } from "interfaces/extended.interfaces";
+import { ExtendedAuthRequest } from "interfaces/extended.interfaces";
 
 interface DecodedToken extends JwtPayload {
     id: number;
@@ -60,13 +60,15 @@ interface DecodedToken extends JwtPayload {
       }
     }
   
-    (req as ExtendedRequest).sessionUser = user;
+    (req as ExtendedAuthRequest).sessionUser = user;
   
     next();
   });
 
   export const protectedAccountOwner = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const {user, sessionUser} = req as ExtendedRequest;
+    const {user, sessionUser} = req as ExtendedAuthRequest;
+
+    console.log({user, sessionUser})
 
     if(user.pk_user !== sessionUser.pk_user){
       return next(new AppError("You don't have permission to perform this action", 401));

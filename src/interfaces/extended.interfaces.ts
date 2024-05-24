@@ -1,6 +1,6 @@
 import User, { IUser } from "database/models/user.model";
 import { Request } from "express";
-import { BaseError } from "sequelize";
+import Routine from "./../database/models/routine.model";
 
 export interface ExtendedError extends Error {
     statusCode: number;
@@ -13,7 +13,11 @@ export interface ExtendedError extends Error {
     };
 };
 
-export interface ExtendedRequest extends Request {
+export interface ExtendedAuthRequest extends Request {
     user: User;
     sessionUser: User;
+}
+
+export interface ExtendedRoutineRequest extends Request {
+    routine: Routine
 }
