@@ -1,18 +1,5 @@
-import { NextFunction, Request, Response } from "express";
-import { body, validationResult } from "express-validator";
-
-const validFields = (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "error",
-      errors: errors.mapped(),
-    });
-  }
-
-  next();
-};
+import { body } from "express-validator";
+import validFields from "./../utils/validFields";
 
 export const signupValidations = [
   body("name")
