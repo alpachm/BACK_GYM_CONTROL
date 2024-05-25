@@ -81,6 +81,21 @@ export const findAllRoutineByFkUser = catchAsync(async (req: Request, res: Respo
     message: "All routines were listed",
     routines
   })
+});
+
+export const unlinDailykRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const routine = (req as ExtendedRoutineRequest).routine;
+
+  await routine.update({
+    status: false
+  });
+
+  const day = getEnumKeyValue(EDays, routine.fk_day);
+
+  res.status(200).json({
+    status: "success",
+    message: `The routine has been disabled for the day ${day}`
+  })
 })
 
 export const deleteRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -92,4 +107,4 @@ export const deleteRoutine = catchAsync(async (req: Request, res: Response, next
       status: "success",
       message: "The routine was deleted"
     })
-})
+});
