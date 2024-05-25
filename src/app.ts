@@ -8,6 +8,7 @@ import AppError from "./utils/appError";
 import globalHandlerError from "./controllers/error.controller";
 import authRoutes from "./routes/auth.routes";
 import routineRoutes from "./routes/routine.routes";
+import dayRoutes from "./routes/day.routes";
 
 const app: Application = express();
 const limiter = rateLimit({
@@ -26,6 +27,7 @@ app.use("/api/v1", limiter);
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/routine", routineRoutes);
+app.use("/api/v1/day", dayRoutes);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(

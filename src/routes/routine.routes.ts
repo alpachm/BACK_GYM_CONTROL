@@ -1,6 +1,6 @@
 import express from "express";
 import {protect} from "./../middlewares/authentication.middlewares";
-import {createRoutine, deleteRoutine, findAllRoutineByFkUser, unlinDailykRoutine} from "./../controllers/routine.controller";
+import {createRoutine, deleteRoutine, findAllRoutineByFkUser, unlinkDailykRoutine} from "./../controllers/routine.controller";
 import {createRoutineValidations} from "./../validations/routine.validations";
 import {validRoutineDay, validIfRoutineExist} from "./../middlewares/routine.middlewares";
 
@@ -14,7 +14,7 @@ router.route("/")
 router.get("/:userId", findAllRoutineByFkUser)
 
 router.route("/unlink/:id")
-    .get(validIfRoutineExist, unlinDailykRoutine)
+    .get(validIfRoutineExist, unlinkDailykRoutine)
 
 router.delete("/delete/:id", validIfRoutineExist, deleteRoutine)
 

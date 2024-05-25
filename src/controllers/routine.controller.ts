@@ -83,7 +83,7 @@ export const findAllRoutineByFkUser = catchAsync(async (req: Request, res: Respo
   })
 });
 
-export const unlinDailykRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const unlinkDailykRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const routine = (req as ExtendedRoutineRequest).routine;
 
   await routine.update({
