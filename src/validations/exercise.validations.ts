@@ -1,7 +1,7 @@
 import validFields from "./../utils/validFields";
 import { body } from "express-validator";
 
-export const createExerciseValidatins = [
+export const createExerciseValidations = [
   body("name")
     .notEmpty()
     .withMessage("Name is required")

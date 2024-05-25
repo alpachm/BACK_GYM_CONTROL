@@ -37,3 +37,25 @@ export const createExercise = catchAsync(
     });
   }
 );
+
+export const findExercisesPerUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    const exercises = await Exercise.findAll({
+      where: {
+        fk_user: id,
+        status: true,
+      },
+      attributes: {exclude: ["createdAt", "updatedAt", "status"]}
+    });
+
+    if(!exercises.length) return (new AppError(`The user with id ${id} does not yet have exercises register`, 404));
+
+    res.status(200).json({
+        status: "success",
+        message: "All exercises was found",
+        data: exercises
+    })
+  }
+);
