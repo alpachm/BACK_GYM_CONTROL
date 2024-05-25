@@ -67,4 +67,17 @@ export const findExerciseById = catchAsync(async (req: Request, res: Response, n
         message: "The exercise was found",
         exercise
     })
+});
+
+export const softDeleteExercise = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const exercise = (req as ExtendedExerciseRequest).exercise;
+
+    await exercise.update({
+        status: false
+    });
+
+    res.status(200).json({
+        status: "success",
+        message: "The exercise was delete"
+    })
 })

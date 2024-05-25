@@ -1,5 +1,5 @@
 import express from "express";
-import {createExercise, findExercisesPerUser, findExerciseById} from "./../controllers/exercise.controller";
+import {createExercise, findExercisesPerUser, findExerciseById, softDeleteExercise} from "./../controllers/exercise.controller";
 import {createExerciseValidations} from "./../validations/exercise.validations";
 import {protect} from "./../middlewares/authentication.middlewares";
 import {validIfUserExist} from "./../middlewares/auth.middlewares";
@@ -14,6 +14,7 @@ router.route("/")
 
 router.route("/:id")
     .get(validIfExerciseExist, findExerciseById)
+    .delete(validIfExerciseExist, softDeleteExercise)
 
 router.get("/getAllExercise/:id", validIfUserExist, findExercisesPerUser)
 
