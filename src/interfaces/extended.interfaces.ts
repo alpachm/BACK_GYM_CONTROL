@@ -1,6 +1,7 @@
 import User, { IUser } from "database/models/user.model";
 import { Request } from "express";
 import Routine from "./../database/models/routine.model";
+import Exercise from "./../database/models/exercise.model";
 
 export interface ExtendedError extends Error {
     statusCode: number;
@@ -20,4 +21,8 @@ export interface ExtendedAuthRequest extends Request {
 
 export interface ExtendedRoutineRequest extends Request {
     routine: Routine
+}
+
+export interface ExtendedExerciseRequest extends Request {
+    exercise: Exercise
 }

@@ -1,8 +1,9 @@
 import express from "express";
-import {createExercise, findExercisesPerUser} from "./../controllers/exercise.controller";
+import {createExercise, findExercisesPerUser, findExerciseById} from "./../controllers/exercise.controller";
 import {createExerciseValidations} from "./../validations/exercise.validations";
 import {protect} from "./../middlewares/authentication.middlewares";
 import {validIfUserExist} from "./../middlewares/auth.middlewares";
+import {validIfExerciseExist} from "./../middlewares/exercise.middlewares";
 
 const router = express.Router();
 
@@ -12,6 +13,8 @@ router.route("/")
     .post(createExerciseValidations, createExercise)
 
 router.route("/:id")
-    .get(validIfUserExist, findExercisesPerUser)
+    .get(validIfExerciseExist, findExerciseById)
+
+router.get("/getAllExercise/:id", validIfUserExist, findExercisesPerUser)
 
 export default router;

@@ -2,10 +2,9 @@ import catchAsync from "./../utils/catchAsync";
 import AppError from "./../utils/appError";
 import User from "./../database/models/user.model";
 import Exercise, { IExercise } from "./../database/models/exercise.model";
-import RoutineExercise from "./../database/models/routine_exercise.model";
-import Routine from "./../database/models/routine.model";
 import { NextFunction, Request, Response } from "express";
 import { formatText } from "./../utils/formatText";
+import { ExtendedExerciseRequest } from "./../interfaces/extended.interfaces";
 
 export const createExercise = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -59,3 +58,13 @@ export const findExercisesPerUser = catchAsync(
     })
   }
 );
+
+export const findExerciseById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const exercise = (req as ExtendedExerciseRequest).exercise;
+
+    res.status(200).json({
+        status: "success",
+        message: "The exercise was found",
+        exercise
+    })
+})
