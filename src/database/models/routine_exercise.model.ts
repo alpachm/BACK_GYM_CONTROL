@@ -1,5 +1,5 @@
 import db from "./../config/index";
-import {DataTypes, Model} from "sequelize";
+import {DataTypes, Model, Optional} from "sequelize";
 
 export interface IRoutineExercise {
     pk_routine_exercise: number;
@@ -7,7 +7,9 @@ export interface IRoutineExercise {
     fk_exercise: number;
 };
 
-class RoutineExercise extends Model<IRoutineExercise> implements IRoutineExercise {
+interface IRoutineExerciseCreationAttributes extends Optional<IRoutineExercise, "pk_routine_exercise">{};
+
+class RoutineExercise extends Model<IRoutineExercise, IRoutineExerciseCreationAttributes> implements IRoutineExercise {
     public pk_routine_exercise!: number;
     public fk_routine!: number;
     public fk_exercise!: number;

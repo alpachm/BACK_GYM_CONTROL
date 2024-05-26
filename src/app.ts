@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.routes";
 import routineRoutes from "./routes/routine.routes";
 import exerciseRoutes from "./routes/exercise.routes";
 import dayRoutes from "./routes/day.routes";
+import routine_exerciseRoutes from "./routes/routine_exercise.routes";
 
 const app: Application = express();
 const limiter = rateLimit({
@@ -30,6 +31,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/routine", routineRoutes);
 app.use("/api/v1/day", dayRoutes);
 app.use("/api/v1/exercise", exerciseRoutes);
+app.use("/api/v1/routine-exercise", routine_exerciseRoutes);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(
