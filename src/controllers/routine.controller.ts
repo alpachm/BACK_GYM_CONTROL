@@ -85,18 +85,19 @@ export const findAllRoutineByFkUser = catchAsync(async (req: Request, res: Respo
 
 export const unlinkDailykRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const routine = (req as ExtendedRoutineRequest).routine;
+  const dayId = routine.fk_day;
 
   await routine.update({
-    status: false
+    fk_day: 0 // Se asigna el numero cero porque no esta relacionado a ningun dia
   });
 
-  const day = getEnumKeyValue(EDays, routine.fk_day);
+  const day = getEnumKeyValue(EDays, dayId);
 
   res.status(200).json({
     status: "success",
     message: `The routine has been disabled for the day ${day}`
   })
-})
+});
 
 export const deleteRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const routine = (req as ExtendedRoutineRequest).routine;
