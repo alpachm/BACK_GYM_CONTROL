@@ -1,7 +1,9 @@
 import catchAsync from "./../utils/catchAsync";
 import AppError from "./../utils/appError";
 import User from "./../database/models/user.model";
+import Routine from "./../database/models/routine.model";
 import Exercise, { IExercise } from "./../database/models/exercise.model";
+import RoutineExercise from "./../database/models/routine_exercise.model";
 import { NextFunction, Request, Response } from "express";
 import { formatText } from "./../utils/formatText";
 import { ExtendedExerciseRequest } from "./../interfaces/extended.interfaces";
@@ -9,18 +11,6 @@ import { ExtendedExerciseRequest } from "./../interfaces/extended.interfaces";
 export const createExercise = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, weight, repetitions, img_url, fk_user }: IExercise = req.body;
-
-    const user = await User.findOne({
-      where: {
-        pk_user: fk_user,
-        status: true,
-      },
-    });
-
-    if (!user)
-      return next(
-        new AppError(`The user with id ${fk_user} was not found`, 404)
-      );
 
     const exercise = await Exercise.create({
       name: formatText(name),
@@ -36,6 +26,38 @@ export const createExercise = catchAsync(
     });
   }
 );
+
+export const createExerciseFromRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const {routineId} = req.params;
+  const {name, weight, repetitions, img_url, fk_user}: IExercise = req.body;
+
+  const routine = await Routine.findOne({
+    where: {
+      pk_routine: +routineId,
+      status: true
+    }
+  });
+
+  if(!routine) return next(new AppError(`The routine with id ${routineId} was not found`, 404));
+
+  const exercise = await Exercise.create({
+    name: formatText(name),
+    weight,
+    repetitions,
+    img_url,
+    fk_user,
+  });
+  
+  await RoutineExercise.create({
+    fk_routine: +routineId,
+    fk_exercise: exercise.pk_exercise
+  });
+
+  res.status(201).json({
+    status: "success",
+    message: `The exercise has been created for routine ${routine.name}`
+  })
+})
 
 export const findExercisesPerUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
