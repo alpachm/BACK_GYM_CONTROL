@@ -6,11 +6,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import AppError from "./utils/appError";
 import globalHandlerError from "./controllers/error.controller";
-import authRoutes from "./routes/auth.routes";
-import routineRoutes from "./routes/routine.routes";
-import exerciseRoutes from "./routes/exercise.routes";
-import dayRoutes from "./routes/day.routes";
-import routine_exerciseRoutes from "./routes/routine_exercise.routes";
+import router from "./routes/index";
 
 const app: Application = express();
 const limiter = rateLimit({
@@ -27,11 +23,7 @@ app.use(cors());
 
 app.use("/api/v1", limiter);
 
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/routine", routineRoutes);
-app.use("/api/v1/day", dayRoutes);
-app.use("/api/v1/exercise", exerciseRoutes);
-app.use("/api/v1/routine-exercise", routine_exerciseRoutes);
+app.use(router);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(
