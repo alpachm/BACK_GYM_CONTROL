@@ -10,9 +10,9 @@ import router from "./routes/index";
 
 const app: Application = express();
 const limiter = rateLimit({
-  max: 100,
-  windowMs: 60 * 60 * 1000,
-  message: "Too many request from this IP. Please try again in one hour",
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: "Too many request from this IP. Please try again in one hour",
 });
 
 app.use(express.json());
@@ -26,9 +26,12 @@ app.use("/api/v1", limiter);
 app.use(router);
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
-  next(
-    new AppError(`The route ${req.originalUrl} was not found on this site`, 404)
-  );
+    next(
+        new AppError(
+            `The route ${req.originalUrl} was not found on this site`,
+            404
+        )
+    );
 });
 
 app.use(globalHandlerError);
