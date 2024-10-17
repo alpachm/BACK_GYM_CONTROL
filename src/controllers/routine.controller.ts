@@ -8,7 +8,7 @@ import { NextFunction, Request, Response } from "express";
 import { formatText } from "./../utils/formatText";
 import { EDays } from "./../enums/day.enums";
 import getEnumKeyValue from "./../utils/getEnumKeyValue";
-import {ExtendedRoutineRequest} from "./../interfaces/extended.interfaces";
+import {ExtendedAuthRequest, ExtendedRoutineRequest} from "./../interfaces/extended.interfaces";
 
 export const createRoutine = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -82,6 +82,40 @@ export const findAllRoutineByFkUser = catchAsync(async (req: Request, res: Respo
     routines
   })
 });
+
+export const findRoutineByDay =  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  //id = userId
+  const {id, dayId} = req.params;
+
+  const routine = await Routine.findOne({
+    where: {
+      fk_user: id,
+      fk_day: dayId,
+      status: true,
+    },
+    attributes: {exclude: ["createdAt", "updatedAt"]},
+    include: [
+      {
+        model: RoutineExercise,
+        attributes: {include: ["pk_routine_exercise"]},
+        include: [{
+          model: Exercise,
+          attributes: {exclude: ["createdAt", "updatedAt"]}
+        }]
+      }
+    ]
+  })
+
+  if(!routine){
+    return next(new AppError(`Routine with id ${dayId} was not found`, 404));
+  }  
+
+  res.status(200).json({
+    status: "success",
+    message: "Routine was found successfully",
+    routine
+  })
+})
 
 export const unlinkDailykRoutine = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const routine = (req as ExtendedRoutineRequest).routine;
